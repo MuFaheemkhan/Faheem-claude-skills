@@ -1,6 +1,6 @@
 ---
 name: pre-pr-audit
-description: Pre-PR consistency audit — verify a change's cross-cutting wiring is complete before opening a pull request or merging. Use AFTER building/changing a feature and BEFORE review. Triggers include "ready for PR", "pre-PR check", "did I wire this up", "consistency check", "review my change before I push", "before I merge", "audit this feature", "check for missing wiring". Independently verifies (trust-but-verify, against the actual files) that protected routes are guarded, authorization is enforced, mutations handle errors, caches/state invalidate, routes/handlers are registered, and tests exist — the side-channels that compile fine but are silently missing. Complements logic-bug review tools. Employs a Genius Panel methodology.
+description: Use AFTER building or changing a feature and BEFORE opening a pull request or merging, to check the change's cross-cutting wiring. Triggers include "ready for PR", "pre-PR check", "did I wire this up", "consistency check", "review my change before I push", "before I merge", "audit this feature", "check for missing wiring".
 ---
 
 # Pre-PR Audit

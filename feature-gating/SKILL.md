@@ -1,6 +1,6 @@
 ---
 name: feature-gating
-description: Add or modify an entitlement gate — paywall, plan tier, feature flag, or quota — correctly and in one seam. Use when introducing a premium wall, gating a feature behind a plan/role/entitlement, enforcing a usage limit, or touching tier logic. Triggers include "paywall", "premium gate", "gate behind a plan", "feature flag", "entitlement", "usage limit", "quota", "tier check", "free vs paid". Encodes the single-seam rule, the owner/subject-resolution trap for shared resources (check who the resource belongs to, not always the caller), a consistent machine-readable error contract, defense-in-depth for raceable limits, and clean client-side wall wiring. Employs a Genius Panel methodology.
+description: Use when introducing a premium wall or paywall, gating a feature behind a plan/role/entitlement/flag, enforcing a usage limit, or touching tier logic. Triggers include "paywall", "premium gate", "gate behind a plan", "feature flag", "entitlement", "usage limit", "quota", "tier check", "free vs paid".
 ---
 
 # Feature Gating

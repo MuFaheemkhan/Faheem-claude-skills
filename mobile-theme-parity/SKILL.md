@@ -1,6 +1,6 @@
 ---
 name: mobile-theme-parity
-description: Catch and fix the brand-pinned-background trap that silently breaks React Native / Expo screens in dark mode. Use when building or reviewing mobile UI where a screen background is pinned to a brand colour (e.g. `brand.cream`, `brand.warm`, hard-coded hex) while child components resolve text/fill colours via `useColorScheme()` — the dark-mode result is invisible labels and near-black fills on a light surface that typecheck / lint / jest cannot see. Triggers include "dark mode broken", "black input on cream", "input field wrong colour", "labels not visible", "useColorScheme", "scheme lock", "ThemeProvider", "branded auth screen", "brand pinned background", "theme parity", "screen looks fine in light but broken in dark", "fix dark mode", "make the auth/onboarding/marketing screen premium". Also relevant whenever a parent component fixes one half of an ambient-state-dependent visual pair (colour scheme, locale, RTL, dynamic type) while descendants resolve the other half from a different source. Encodes: the rule (fixed background obligates fixed foreground), the scheme-lock seam, the grep-able audit, on-device verification, and how the bug spreads via copy-paste.
+description: Use when a mobile screen looks fine in light mode but breaks in dark mode — invisible labels, near-black inputs on a light surface — or when building/reviewing screens whose background is pinned to a brand colour while children resolve colours via useColorScheme(). Also for other ambient-state mismatches (locale, RTL, dynamic type). Triggers include "dark mode broken", "black input on cream", "labels not visible", "useColorScheme", "scheme lock", "brand pinned background", "theme parity", "fix dark mode", "branded auth screen".
 ---
 
 # Mobile Theme Parity — the brand-pinned-background trap
@@ -39,14 +39,14 @@ Before writing the fix, find every instance — the trap is usually copy-pasted.
 
 ```bash
 # 1. Every screen with a brand-pinned background
-rg 'backgroundColor:\s*[a-zA-Z.]+brand\.' mobile/src --type tsx --type ts
-rg 'backgroundColor:\s*[a-zA-Z.]+\.(cream|warm|mint|sand|sage|fawn|paper)' mobile/src
+rg 'backgroundColor:\s*[a-zA-Z.]+brand\.' <src> --type tsx --type ts
+rg 'backgroundColor:\s*[a-zA-Z.]+\.(cream|warm|mint|sand|sage|fawn|paper)' <src>
 
 # 2. Every consumer of useColorScheme — these flip with the OS
-rg 'useColorScheme\(' mobile/src
+rg 'useColorScheme\(' <src>
 
 # 3. Hard-coded #FFFFFF / #000000 outside the theme module (HIG anti-pattern)
-rg "['\"]#(FFFFFF|000000)['\"]" mobile/src --type tsx --glob '!**/theme/**'
+rg "['\"]#(FFFFFF|000000)['\"]" <src> --type tsx --glob '!**/theme/**'
 ```
 
 Any file appearing in (1) whose descendants resolve text/fill from `useColorScheme()` (directly or via a scheme-aware token like `colors.text`/`colors.backgroundSecondary`) is a bug site. Expect to find several — the idiom spreads.

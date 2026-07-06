@@ -1,6 +1,6 @@
 ---
 name: migration-discipline
-description: Safely create, review, and apply database schema and data migrations in any project. Use whenever a model/schema changes, a table or column is added/renamed/dropped, a data backfill is needed, or a migration won't apply. Triggers include "migration", "schema change", "add a column", "rename column", "new table", "autogenerate migration", "data migration", "backfill", "migration failed", "alembic", "prisma migrate", "rails migration", "django migrate", "flyway", "knex". Encodes running migrations in the right environment, treating autogeneration as a draft, reversibility, expand/contract for zero-downtime, and data migrations that are safe on both empty and populated databases. Employs a Genius Panel methodology.
+description: Use whenever a model or database schema changes, a table or column is added, renamed, or dropped, a data backfill is needed, or a migration won't apply. Triggers include "migration", "schema change", "add a column", "rename column", "new table", "autogenerate migration", "data migration", "backfill", "migration failed", "alembic", "prisma migrate", "rails migration", "django migrate", "flyway", "knex".
 ---
 
 # Migration Discipline

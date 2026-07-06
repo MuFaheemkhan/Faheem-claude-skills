@@ -1,6 +1,6 @@
 ---
 name: vertical-slice
-description: Build a feature as a complete vertical slice across a layered codebase, following the project's OWN conventions rather than a generic template. Use when adding or extending a feature that spans multiple layers — a new resource, endpoint, screen, or data flow from storage to UI. Triggers include "add a feature", "new endpoint", "new screen", "full stack", "vertical slice", "wire up end to end", "scaffold a resource". Encodes the discipline of mirroring the nearest existing slice and wiring every cross-cutting concern (auth/scoping, authorization, validation, audit/logging, cache invalidation, error handling, tests) that compiles fine when missing. Employs a Genius Panel methodology.
+description: Use when adding or extending a feature that spans multiple layers of a codebase — a new resource, endpoint, screen, or data flow from storage to UI. Triggers include "add a feature", "new endpoint", "new screen", "full stack", "vertical slice", "wire up end to end", "scaffold a resource".
 ---
 
 # Vertical Slice Builder
