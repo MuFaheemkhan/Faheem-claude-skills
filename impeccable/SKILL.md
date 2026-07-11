@@ -15,11 +15,12 @@ Designs and iterates production-grade frontend interfaces. Real working code, co
 
 You MUST do these steps before proceeding:
 
-1. Run `node .claude/skills/impeccable/scripts/context.mjs` once per session. If the request names or implies a file, route, or app inside a monorepo, infer the concrete path and run `node .claude/skills/impeccable/scripts/context.mjs --target <path>` instead. If you've already seen its output in this conversation, do not re-run it. The script either prints the project's PRODUCT.md (and DESIGN.md when present) as a markdown block, or tells you it's missing. Follow whatever it prints. **If it reports `NO_PRODUCT_MD`, stop and follow `reference/init.md` before doing anything else.** If the output ends with an `UPDATE_AVAILABLE` directive, follow it (ask the user once about updating, then continue). It never blocks the current task.
+1. Run `node .claude/skills/impeccable/scripts/context.mjs` once per session. (Path missing? The skill is installed at the user level — prefix every script command in this file with the skill's own directory, e.g. `~/.claude/skills/impeccable/scripts/`.) If the request names or implies a file, route, or app inside a monorepo, infer the concrete path and run `node .claude/skills/impeccable/scripts/context.mjs --target <path>` instead. If you've already seen its output in this conversation, do not re-run it. The script either prints the project's PRODUCT.md (and DESIGN.md when present) as a markdown block, or tells you it's missing. Follow whatever it prints. **If it reports `NO_PRODUCT_MD`, stop and follow `reference/init.md` before doing anything else.** If the output ends with an `UPDATE_AVAILABLE` directive, follow it (ask the user once about updating, then continue). It never blocks the current task.
 2. If the user invoked a sub-command (`craft`, `shape`, `audit`, `polish`, ...), you MUST read `reference/<command>.md` next. Non-optional. The reference defines the command's flow; without it you will skip steps the user expects.
 3. Familiarize yourself with any existing design system, conventions, and components in the code. Read at least one project file (CSS / tokens / theme / a representative component or page). **Required even when you've loaded a sub-command reference in step 2.** Don't reinvent the wheel; use what's there when it works, branch out when the UX wins.
 4. Read the matching register reference. **This is non-optional; skipping it produces generic output.** If the project is marketing, a landing page, a campaign, long-form content, or a portfolio (design IS the product), read `reference/brand.md`. If it is app UI, admin, a dashboard, or a tool (design SERVES the product), read `reference/product.md`. Pick by first match: (1) task cue ("landing page" vs "dashboard"); (2) surface in focus (the page, file, or route being worked on); (3) `register` field in PRODUCT.md.
 5. **If the project is brand-new (no existing CSS tokens / theme / committed brand colors found in step 3)**, run `node .claude/skills/impeccable/scripts/palette.mjs` to receive a brand seed color and composition guidance. This is the anchor for your primary brand color. Compose the rest of the palette (bg, surface, ink, accent, muted) around it per the script's instructions. Use OKLCH throughout. **Skip this step only if step 3 found committed brand colors in existing tokens; in that case identity-preservation wins.**
+6. **React Native / Expo target** (`react-native`/`expo` in package.json, StyleSheet not CSS): the design judgment in this skill applies, the CSS vocabulary does not — this step overrides every CSS-specific rule in this file and its references (including step 5's OKLCH and the Motion `@media` rule). No `oklch()` color strings (RN's parser rejects them — emit hex/rgba tokens), no `clamp()` / `text-wrap` / `<dialog>` / `env()` / `@media` in StyleSheets. Translate: reduced motion → Reanimated `useReducedMotion()` / `AccessibilityInfo.isReduceMotionEnabled()`; dialogs → `Modal`; safe areas → `react-native-safe-area-context`; ARIA → `accessibilityRole` / `accessibilityLabel` / `accessibilityState`. Defer stack, list performance, and release discipline to the sibling react-native-skill; component construction to ui-build; dark-mode parity on brand-pinned screens to mobile-theme-parity.
 
 ## Design guidance
 
@@ -36,6 +37,7 @@ Produce ready-to-ship, production-grade code, not prototypes or starting points.
 
 - Cap body line length at 65–75ch.
 - Don't pair fonts that are similar but not identical (two geometric sans-serifs, two humanist sans-serifs). Pair on a contrast axis (serif + sans, geometric + humanist) or use one family in multiple weights.
+- Form controls on mobile web keep font-size ≥ 16px — smaller triggers iOS Safari's auto-zoom on focus, even in dense product UI.
 - Hero / display heading ceiling: clamp() max ≤ 6rem (~96px). Above that the page is shouting, not designing.
 - Display heading letter-spacing floor: ≥ -0.04em. Anything tighter and letters touch; cramped, not "designed".
 - Use `text-wrap: balance` on h1–h3 for even line lengths; `text-wrap: pretty` on long prose to reduce orphans.
@@ -46,6 +48,7 @@ Produce ready-to-ship, production-grade code, not prototypes or starting points.
 - Cards are the lazy answer. Use them only when they're truly the best affordance. Nested cards are always wrong.
 - Flexbox for 1D, Grid for 2D. Don't default to Grid when `flex-wrap` would be simpler.
 - For responsive grids without breakpoints: `repeat(auto-fit, minmax(280px, 1fr))`.
+- Full-viewport heights: `100dvh` (or `svh` above the fold), never `100vh` — mobile browser chrome makes `100vh` overflow the visible viewport and hide bottom-anchored content.
 - Build a semantic z-index scale (dropdown → sticky → modal-backdrop → modal → toast → tooltip). Never arbitrary values like 999 or 9999.
 
 #### Motion
@@ -61,6 +64,7 @@ Produce ready-to-ship, production-grade code, not prototypes or starting points.
 #### Interaction
 
 - Dropdowns rendered with `position: absolute` inside an `overflow: hidden` or `overflow: auto` container will be clipped. Use the native `<dialog>` / popover API, `position: fixed`, or a portal to escape the stacking context.
+- Overlays must contain screen-reader focus. Web: native `<dialog>` / popover give it free. React Native: `Modal` gives it free; custom sheets need `accessibilityViewIsModal` (iOS) and `importantForAccessibility="no-hide-descendants"` on the underlay (Android).
 
 ### New projects only (when no prior work exists)
 
@@ -161,7 +165,7 @@ If the first word is `craft`, setup still runs first, but [reference/craft.md](r
 node .claude/skills/impeccable/scripts/pin.mjs <pin|unpin> <command>
 ```
 
-Valid `<command>` is any command from the table above. Report the script's result concisely. Confirm the new shortcut on success, relay stderr verbatim on error.
+Valid `<command>` is any command from the table above. If the shortcut name would shadow an existing skill or command (e.g. a standalone `harden` skill), warn and confirm before pinning. Report the script's result concisely. Confirm the new shortcut on success, relay stderr verbatim on error.
 
 ## Hooks
 

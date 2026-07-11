@@ -15,6 +15,7 @@ Run comprehensive checks across 5 dimensions. Score each dimension 0-4 using the
 - **Semantic HTML**: Improper heading hierarchy, missing landmarks, divs instead of buttons
 - **Alt text**: Missing or poor image descriptions
 - **Form issues**: Inputs without labels, poor error messaging, missing required indicators
+- **React Native surfaces**: translate the checks above — `accessibilityRole` / `accessibilityLabel` / `accessibilityState` on Pressables, `accessibilityLabel` on `Image` instead of alt text, ≥44pt hit areas (`hitSlop`), VoiceOver/TalkBack focus order instead of tab order. Flagging "missing ARIA" or recommending HTML fixes in RN code is a false positive.
 
 **Score 0-4**: 0=Inaccessible (fails WCAG A), 1=Major gaps (few ARIA labels, no keyboard nav), 2=Partial (some a11y effort, significant gaps), 3=Good (WCAG AA mostly met, minor gaps), 4=Excellent (WCAG AA fully met, approaches AAA)
 
@@ -43,10 +44,11 @@ Run comprehensive checks across 5 dimensions. Score each dimension 0-4 using the
 
 **Check for**:
 - **Fixed widths**: Hard-coded widths that break on mobile
-- **Touch targets**: Interactive elements < 44x44px
+- **Touch targets**: < 24x24px fails WCAG 2.2 AA (2.5.8); < 44x44px on touch surfaces is a best-practice finding, not an AA violation
 - **Horizontal scroll**: Content overflow on narrow viewports
 - **Text scaling**: Layouts that break when text size increases
 - **Missing breakpoints**: No mobile/tablet variants
+- **Mobile-web basics**: missing `<meta name="viewport">` (page renders desktop-width on phones), `100vh` where `dvh`/`svh` is needed, edge-pinned bars without `env(safe-area-inset-*)`
 
 **Score 0-4**: 0=Desktop-only (breaks on mobile), 1=Major issues (some breakpoints, many failures), 2=Partial (works on mobile, rough edges), 3=Good (responsive, minor touch target or overflow issues), 4=Excellent (fluid, all viewports, proper touch targets)
 

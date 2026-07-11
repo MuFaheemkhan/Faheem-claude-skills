@@ -29,6 +29,8 @@ Understand what needs adaptation and why:
 
 **CRITICAL**: Adaptation is rethinking the experience for the new context, not scaling pixels.
 
+**React Native targets**: the CSS/HTML mechanics below are web-only — deliver the same strategies with `useWindowDimensions`, `Platform.select`, flex layouts, `SafeAreaView` (react-native-safe-area-context), and `FlatList`/`Image` props, and treat the raised keyboard as an adaptation target (`KeyboardAvoidingView` / keyboard-aware scroll).
+
 ## Plan Adaptation Strategy
 
 Create context-appropriate strategy:
@@ -149,6 +151,7 @@ Choose appropriate breakpoints:
 - Remove hover-dependent interactions
 - Add touch feedback (ripples, highlights)
 - Consider thumb zones (easier to reach bottom than top)
+- Keep form-control font-size ≥ 16px on mobile web (smaller triggers iOS Safari's auto-zoom on focus)
 
 ### Content Adaptation
 

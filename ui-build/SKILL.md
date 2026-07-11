@@ -1,6 +1,6 @@
 ---
 name: ui-build
-description: Use when adding a reusable UI component to a React Native / web project, or building a screen or component from a screenshot, mockup, Figma export, or design reference. Triggers include "scaffold a component", "new primitive", "create a Badge/Banner/Toggle", "add to the UI kit", "new UI-kit component", "build this screen", "here's a screenshot", "recreate this design", "turn this mockup into a screen", "implement this UI", "match this design", "code this from the image".
+description: Use when adding a reusable UI component to a React Native / web project, building a screen or component from a screenshot, mockup, Figma export, or design reference, or restyling an existing screen to match project conventions. Triggers include "scaffold a component", "new primitive", "create a Badge/Banner/Toggle", "add to the UI kit", "new UI-kit component", "build this screen", "here's a screenshot", "recreate this design", "turn this mockup into a screen", "implement this UI", "match this design", "code this from the image", "restyle this screen", "make this screen match the app".
 ---
 
 # Build UI in the project's own style
@@ -25,6 +25,10 @@ Open 2–3 existing components / screens, plus CLAUDE.md / README, and extract:
 - **Ref convention** — does the kit `forwardRef`? Match it for pressables/inputs.
 - **Verification harness** — Playwright / Detox / Storybook / `expo start --web`
   / test files. This is how you close the loop at the end.
+- **CalmMoney-family app?** calmmoney-design already documents the house style —
+  load it instead of re-deriving these from samples.
+- **Greenfield (nothing to discover)?** Create the seam first — react-native-skill
+  for Expo/RN structure, `/impeccable init` for web — then return here.
 
 ## Path A — Scaffold a kit component
 
@@ -33,7 +37,9 @@ Open 2–3 existing components / screens, plus CLAUDE.md / README, and extract:
    second consumer appears.
 2. File with a header comment stating purpose + any contract; a `<Name>Props`
    interface; variants via the project's variant lib; `forwardRef` if the
-   convention calls for it.
+   convention calls for it. On web, interactive primitives use the native
+   element (`<button>` / `<input>` / `<a>`, never div+onClick) and cover
+   hover / `:focus-visible` / disabled.
 3. Colour / spacing / type through the project's seam and scale — extend the
    scale once (documented) rather than inlining one-offs.
 4. Compose existing primitives. Export from the barrel. Add the project's
@@ -55,7 +61,9 @@ The image is a *spec*, not paint-by-numbers.
 4. **Close the loop** — wire it into a route/screen, run the render harness,
    READ the produced screenshot back, and compare to the source: hierarchy,
    spacing, colour roles, alignment. Iterate. No harness? Set up the simplest
-   one that screenshots a route — guessing from code alone is the bug.
+   one that screenshots a route — guessing from code alone is the bug. On web,
+   screenshot at a phone width (~375px) AND a desktop width — the mockup shows
+   one viewport, not the layout's only size.
 5. **Complex screens** — a short multi-lens pass before "done": fidelity vs
    source · convention compliance · contrast/a11y (WCAG on the pairs used,
    ≥44px targets). Fix what any lens flags.
@@ -63,7 +71,11 @@ The image is a *spec*, not paint-by-numbers.
 ## Verify (both paths)
 
 Run the project's typecheck + lint + tests, and render the result at least
-once — read the output, don't assume.
+once — read the output, don't assume. Every interactive element exposes
+role + name + state to screen readers (RN: `accessibilityRole` /
+`accessibilityLabel` / `accessibilityState`; web: a native element or ARIA —
+icon-only pressables always need a label) and ships a ≥44pt effective hit
+area (padding or `hitSlop`) — both paths, not just complex screens.
 
 ## Pitfalls
 
@@ -75,5 +87,21 @@ once — read the output, don't assume.
 - A bespoke pressable that drops the house press / reduce-motion feedback.
 - A pinned brand background with scheme-reading children (invisible labels in
   the other scheme) — see the mobile-theme-parity skill.
+- A full phone screen missing the safe-area wrapper (`SafeAreaView` /
+  `useSafeAreaInsets`) or keyboard avoidance on TextInputs — screenshot
+  harnesses render chrome-less and keyboard-down, so neither failure shows.
+- A repeating list region rebuilt as `ScrollView` + `.map()` instead of the
+  project's `FlatList`/`FlashList` primitive — every row mounts at once at
+  real data sizes.
+- Copying a mockup's placeholder-only inputs literally — fields still need a
+  real label (web: `<label>`; RN: `accessibilityLabel` on the `TextInput`).
+- A web screen sized with `100vh`, or a bottom bar without
+  `env(safe-area-inset-bottom)` — content hides behind mobile browser chrome /
+  the home indicator; use `dvh` + safe-area insets.
+- iOS `shadow*` styles with no Android `elevation` (or cross-platform
+  `boxShadow`) — cards render flat on Android; one platform's render doesn't
+  verify the other.
+- Fixed heights on text-bearing elements — clips under large Dynamic Type /
+  browser zoom; use `minHeight` + padding.
 - Business logic in a presentational primitive.
 - Declaring done without rendering + eyeballing the output.
