@@ -1,0 +1,18 @@
+{
+  "claude-plugins-official": {
+    "source": {
+      "source": "github",
+      "repo": "anthropics/claude-plugins-official"
+    },
+    "installLocation": "C:\\Users\\dev\\.claude\\plugins\\marketplaces\\claude-plugins-official",
+    "lastUpdated": "2026-07-12T08:44:25.992Z"
+  },
+  "ponytail": {
+    "source": {
+      "source": "github",
+      "repo": "DietrichGebert/ponytail"
+    },
+    "installLocation": "C:\\Users\\dev\\.claude\\plugins\\marketplaces\\ponytail",
+    "lastUpdated": "2026-06-19T11:26:14.281Z"
+  }
+}

@@ -1,4 +1,16 @@
-# Logs
+# Ignore everything by default
+/*
+
+# Allow these folders
+!/skills/
+!/agents/
+!/plugins/
+
+# Allow these root files
+!/.gitignore
+!/CLAUDE.md
+
+# Logs (from skills/.gitignore)
 logs
 *.log
 npm-debug.log*
