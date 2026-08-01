@@ -6,7 +6,6 @@ This repository contains custom agent skills and tools for Claude.
 
 - **calmmoney-design**: The CalmMoney house design system (sage palette, dual-font, motion) shared across the family apps.
 - **drunk-claude**: A fun personality module. (third-party)
-- **fable-mode**: Fable 5-style working discipline for non-Fable models.
 - **feature-gating**: Designing and managing feature flags/gates.
 - **harden**: Adversarial validation pipeline for a claim, change, or conclusion (`/harden <claim>`).
 - **impeccable**: Production-grade frontend UI iteration and styling helper. (third-party)
@@ -53,10 +52,10 @@ All of them can be invoked manually — any skill in ~/.claude/skills is callabl
   - harden — only when you invoke /harden or explicitly ask for adversarial validation. We scoped it that way deliberately: it's an expensive rigor escalation you opt into.
   - drunk-claude (third-party) — a personality mode; it only makes sense when you summon it (/drunk-claude 0.7 --mood chaotic).
 
-  Special case:
+  Removed:
 
-  - fable-mode — its description keys on you asking for it ("fable mode", "tighten up", complaints about half-finished turns), so on its own it's semi-manual. But your global CLAUDE.md instructs any non-Fable model to follow it in every response — so under Opus it's effectively always-on via that
-  instruction rather than via description matching. On Fable (this session) it stays dormant.
+  - fable-mode (deleted 2026-08-01) — it tried to be always-on behavior inside a conditionally-loaded container, and about two thirds of it restated the base system prompt. The parts that were genuinely additive (outcome-first ordering, prose register, final-message completeness,
+  verify-this-turn, evidence before state-changing commands) now live inline in ~/.claude/CLAUDE.md, where they load every session without a skill invocation.
 
   One practical note: auto-triggering is judgment, not regex — a skill with matching triggers should fire, but naming it (/pre-pr-audit) is the guarantee. If you ever notice one of the auto set failing to fire when it should, that's a description bug worth fixing — tell me the prompt that missed and I'll  
   widen its triggers.
